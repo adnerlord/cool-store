@@ -1,5 +1,6 @@
 {% extends "shop/base.html" %}
 {% load static %}
+{% load mathfilters %}
 {% block title %}
 {{ product.name }}
 {% endblock %}
@@ -13,11 +14,20 @@
         <h1>{{ product.name }}</h1>
         <h2><a href="{{ product.category.get_absolute_url }}">{{ product.category }}</a></h2>
         <p class="price">{{ product.price }} руб.</p>
-        <form action="{% url "cart:CartAdd" product.id %}" method="post" class="add">
+        {% if product.stock != product.ordered %}
+        <p>На складе: {{ product.stock|sub:product.ordered }} шт.</p>
+        <form action="{% url 'cart:CartAdd' product.id %}" method="post" class="add">
             {{ cart_product_form }}
             {% csrf_token %}
             <input type="submit" value="Добавить в корзину">
         </form>
+        {% else %}
+        <p>Нет в продаже.</p>
+        <form>
+            <input disabled type="submit" value="Узнать о появлении">
+        </form>
+        {% endif %}
+
         <span>
             {{ product.description | linebreaks}}
         </span>
