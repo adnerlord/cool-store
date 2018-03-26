@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.admin.views.decorators import staff_member_required
+from django.core.urlresolvers import reverse
 from .models import OrderItem, Order
 from .forms import OrderCreateForm
 from cart.cart import Cart
@@ -27,8 +28,8 @@ def OrderCreate(request):
 
             # Ассинхронная отправка сообщения
             OrderCreated.delay(order.id)
-
-            return render(request, 'orders/order/created.html', {'order': order})
+            request.session['order_id'] = order.id
+            return redirect(reverse('payment:process'))
 
     form = OrderCreateForm()
     return render(request, 'orders/order/create.html', {'cart': cart,

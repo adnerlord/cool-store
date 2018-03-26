@@ -21,11 +21,18 @@
     {% with product=item.product %}
     <tr>
         <td>
-            <center><a href="{{ product.get_absolute_url }}">
-                <img height="100" width="100" src="{% if product.image %}{{ product.image.url }}{% else %}{% static "
-                     img/no-image.jpg"%}{% endif %}"
-                class="img-responsive">
-            </a></center>
+            <center>
+            <a href="{{ product.get_absolute_url }}">
+                <img height="100" width="100"
+                     src="
+                         {% if product.image %}
+                         {{ product.image.url }}
+                         {% else %}
+                         {% static 'img/no-image.jpg'%}
+                         {% endif %}"
+                     class="img-responsive">
+            </a>
+            </center>
         </td>
         <td>{{ product.name }}</td>
         <td>

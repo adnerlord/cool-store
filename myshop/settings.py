@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'cart',
     'orders',
     'paypal.standard.ipn',
+    'payment',
     'mathfilters',
 ]
 
@@ -127,5 +128,5 @@ CART_SESSION_ID = 'cart'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Paypal
-PAYPAL_RECIEVER_EMAIL = ''
+PAYPAL_RECEIVER_EMAIL = 'ejen.proj.shop@gmail.com'
 PAYPAL_TEST = True
