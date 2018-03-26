@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.utils.html import format_html
 from .models import Order, OrderItem
-import csv
+import unicodecsv as csv
 import datetime
 
 
@@ -14,22 +14,6 @@ def OrderDetail(obj):
 
 
 OrderDetail.short_description = 'Инфо'
-
-
-class OrderItemInline(admin.TabularInline):
-    model = OrderItem
-    raw_id_field = ['product']
-
-
-class OrderAdmin(admin.ModelAdmin):
-    list_display = ['id', 'first_name', 'last_name', 'email', 'address',
-                    'postal_code', 'city', 'paid', 'created', 'updated',
-                    OrderDetail]
-    list_filter = ['paid', 'created', 'updated']
-    inlines = [OrderItemInline]
-
-
-admin.site.register(Order, OrderAdmin)
 
 
 def ExportToCSV(modeladmin, request, queryset):
@@ -52,4 +36,32 @@ def ExportToCSV(modeladmin, request, queryset):
             data_row.append(value)
         writer.writerow(data_row)
     return response
-    ExportToCSV.short_description = 'Export CSV'
+
+
+ExportToCSV.short_description = 'Export to CSV'
+
+
+def OrderPDF(obj):
+    return format_html('<a href="{}">PDF</a>'.format(
+        reverse('orders:AdminOrderPDF', args=[obj.id])
+    ))
+
+
+OrderPDF.short_description = 'В PDF'
+
+
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+    raw_id_field = ['product']
+
+
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ['id', 'first_name', 'last_name', 'email', 'address',
+                    'postal_code', 'city', 'paid', 'created', 'updated',
+                    OrderDetail, OrderPDF]
+    list_filter = ['paid', 'created', 'updated']
+    inlines = [OrderItemInline]
+    actions = [ExportToCSV]
+
+
+admin.site.register(Order, OrderAdmin)
