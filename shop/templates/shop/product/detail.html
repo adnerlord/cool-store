@@ -18,8 +18,9 @@
         <p>На складе: {{ product.stock|sub:product.ordered }} шт.</p>
         <form action="{% url 'cart:CartAdd' product.id %}" method="post" class="add">
             {{ cart_product_form }}
+            <!--<input type="number"  step="1" min="0" max="{{ product.stock|sub:product.ordered }}"/>-->
             {% csrf_token %}
-            <input type="submit" value="Добавить в корзину">
+            <input type="submit" value="Добавить в корзину"/>
         </form>
         {% else %}
         <p>Нет в продаже.</p>

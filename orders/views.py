@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import render_to_string
 from .models import OrderItem, Order
+from shop.models import Product
 from .forms import OrderCreateForm
 from .tasks import OrderCreated
 import weasyprint
@@ -29,6 +30,19 @@ def AdminOrderPDF(request, order_id):
     return response
 
 
+@staff_member_required
+def AdminOrderCompete(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    if not order.completed:
+        Order.objects.filter(id=order_id).update(completed=True, paid=True)
+
+        for item in order.items.all():
+            ordered = list(Product.objects.filter(name=item.product).values('ordered'))[0]['ordered'] - item.quantity
+            stock = list(Product.objects.filter(name=item.product).values('stock'))[0]['stock'] - item.quantity
+            Product.objects.filter(name=item.product).update(ordered=ordered, stock=stock)
+    return render(request, 'admin/orders/order/complete.html', {'order': order})
+
+
 def OrderCreate(request):
     cart = Cart(request)
     if request.method == 'POST':
@@ -39,6 +53,9 @@ def OrderCreate(request):
                 OrderItem.objects.create(order=order, product=item['product'],
                                          price=item['price'],
                                          quantity=item['quantity'])
+                item['product'].ordered += item['quantity']
+                print("##############", item, "##############")
+                item['product'].save()
             cart.clear()
 
             # Ассинхронная отправка сообщения

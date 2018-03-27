@@ -138,5 +138,5 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # Paypal
-PAYPAL_RECEIVER_EMAIL = 'ejen.proj.shop@gmail.com'
+PAYPAL_RECEIVER_EMAIL = 'ejen.proj.shop-facilitator-2@gmail.com'
 PAYPAL_TEST = True

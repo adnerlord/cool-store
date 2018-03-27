@@ -17,6 +17,7 @@ class Order(models.Model):
     created = models.DateTimeField(verbose_name='Создан', auto_now_add=True)
     updated = models.DateTimeField(verbose_name='Обновлен', auto_now=True)
     paid = models.BooleanField(verbose_name='Оплачен', default=False)
+    completed = models.BooleanField(verbose_name='Завершен', default=False)
 
     class Meta:
         ordering = ('-created',)
@@ -39,6 +40,21 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return '{}'.format(self.id)
+
+    # def __getitem__(self, item):
+    #     return self.product
+
+    # Итерация по товарам
+    # def __getitem__(self, item):
+    #     product_ids = self.product.keys()
+    #     products = Product.objects.filter(id__in=product_ids)
+    #     for product in products:
+    #         self.product[str(product.id)]['product'] = product
+    #
+    #     for item in self.product.values():
+    #         # item['price'] = Decimal(item['price'])
+    #         item['total_price'] = item['price'] * item['quantity']
+    #         yield item
 
     def get_cost(self):
         return self.price * self.quantity

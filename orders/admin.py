@@ -50,16 +50,24 @@ def OrderPDF(obj):
 OrderPDF.short_description = 'В PDF'
 
 
+def OrderComplete(obj):
+    return format_html('<a href="{}">Завершить</a>'.format(
+        reverse('orders:AdminOrderCompete', args=[obj.id])
+    ))
+
+
+OrderComplete.short_description = 'Завершить'
+
+
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
     raw_id_field = ['product']
 
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['id', 'first_name', 'last_name', 'email', 'address',
-                    'postal_code', 'city', 'paid', 'created', 'updated',
-                    OrderDetail, OrderPDF]
-    list_filter = ['paid', 'created', 'updated']
+    list_display = ['id', 'first_name', 'last_name', 'email', 'paid', 'completed', 'created', 'updated',
+                    OrderDetail, OrderPDF, OrderComplete]
+    list_filter = ['paid', 'completed', 'created', 'updated']
     inlines = [OrderItemInline]
     actions = [ExportToCSV]
 

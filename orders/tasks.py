@@ -7,7 +7,7 @@ from .models import Order
 @task
 def OrderCreated(order_id):
     """
-    Отправка Email сообщения о создании покупке
+    Отправка Email сообщения о создании покупки
     """
     order = Order.objects.get(id=order_id)
     subject = 'Заказ c номером {}'.format(order.id)
