@@ -9,7 +9,6 @@ install:
 script: 
   - flake8
   - python manage.py test
-  - py.test --pep8
   - coverage run --source='.' manage.py test
 after_success:
   - coverage report
