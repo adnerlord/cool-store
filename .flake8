@@ -1,0 +1,2 @@
+[flake8]
+exclude=migrations, redwing/settings.py, manage.py
