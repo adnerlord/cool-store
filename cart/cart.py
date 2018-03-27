@@ -40,6 +40,7 @@ class Cart(object):
         if product_id in self.cart:
             del self.cart[product_id]
             self.save()
+
     # Итерация по товарам
     def __iter__(self):
         product_ids = self.cart.keys()
