@@ -54,7 +54,6 @@ def OrderCreate(request):
                                          price=item['price'],
                                          quantity=item['quantity'])
                 item['product'].ordered += item['quantity']
-                print("##############", item, "##############")
                 item['product'].save()
             cart.clear()
 

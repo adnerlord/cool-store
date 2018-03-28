@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.utils.encoding import python_2_unicode_compatible
+from django.template.defaultfilters import slugify
 
 
 # Модель категории
@@ -22,6 +23,21 @@ class Category(models.Model):
 
     def get_absolute_url(self):
         return reverse('shop:ProductListByCategory', args=[self.slug])
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+
+        i = 1
+        slug = self.slug
+        while True:
+            if not Category.objects.filter(slug=slug).exists():
+                break
+            i += 1
+            slug = '%s-%d' % (self.slug, i)
+
+        self.slug = slug
+        super(Category, self).save(*args, **kwargs)
 
 
 # Модель продукта
@@ -50,3 +66,20 @@ class Product(models.Model):
 
     def get_absolute_url(self):
         return reverse('shop:ProductDetail', args=[self.id, self.slug])
+
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+
+        i = 1
+        slug = self.slug
+        while True:
+            if not Product.objects.filter(slug=slug).exists():
+                break
+            i += 1
+            slug = '%s-%d' % (self.slug, i)
+
+        self.slug = slug
+        super(Product, self).save(*args, **kwargs)
+

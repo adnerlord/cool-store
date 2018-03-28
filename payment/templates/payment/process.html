@@ -1,10 +1,75 @@
 {% extends "shop/base.html" %}
-
+{% load static %}
 {% block title %}Оплата PayPal{% endblock %}
-
 {% block content %}
-    <h1>Ваш заказ обрабатывается</h1>
-    <p>Вы можете оплатить товар</p>
-    <h1>Оплата PayPal</h1>
-    {{ form.render }}
+<style type="text/css">
+    .ppl {
+        color: black;
+        background: #FFFFFF;
+        width: 37%;
+        height: 90px;
+    }
+</style>
+<table align="center" border="3px" width="100%">
+    <tbody>
+    <tr>
+        <th width="50%"><h1>Ваш заказ обрабатывается</h1></th>
+        <th>
+            <center><a href="#" onclick="window.print()">Распечатать заказ</a></center>
+        </th>
+    </tr>
+    <tr valign="top">
+        <th>
+            <center>
+                <p>Вы можете оплатить товар</p>
+                <div class="ppl">
+                    <h3>Оплата PayPal</h3>
+                    {{ form.render }}
+                </div>
+            </center>
+        </th>
+        <th>
+            <p>
+                Номер заказа: <b>{{ order.id }}</b> <br>
+                <span class="secondary">
+                    {{ order.created }}
+                </span>
+            </p>
+            <p>Покупатель:</p>
+            <p>
+                {{ order.first_name }} {{ order.last_name }}<br>
+                {{ order.email }} <br>
+                {{ order.address }} <br>
+                {{ order.postal_code }}, {{ order.city }}
+            </p>
+        </th>
+    </tr>
+    </tbody>
+</table>
+<h3>Купленные товары</h3>
+<table class="table">
+    <thead>
+    <tr>
+        <th>Товар</th>
+        <th>Стоймость</th>
+        <th>Количество</th>
+        <th>Всего</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for item in order.items.all %}
+    <tr class="row{% cycle " 1
+    " "2" %}">
+    <td>{{ item.product.name }}</td>
+    <td>{{ item.price }}</td>
+    <td>{{ item.quantity }}</td>
+    <td>{{ item.get_cost }}</td>
+    </tr>
+    {% endfor %}
+    <tr class="total">
+        <td colspan="3">Всего:</td>
+        <td class="num">{{ order.get_total_cost }}</td>
+    </tr>
+    </tbody>
+</table>
 {% endblock %}
