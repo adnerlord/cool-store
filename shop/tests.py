@@ -48,4 +48,3 @@ class ProductModelTestCase(TestCase):
         resp = self.client.get(reverse('shop:ProductDetail',
                                        args=[123, product.slug]))
         self.assertEqual(resp.status_code, 404)
-

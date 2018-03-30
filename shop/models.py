@@ -67,7 +67,6 @@ class Product(models.Model):
     def get_absolute_url(self):
         return reverse('shop:ProductDetail', args=[self.id, self.slug])
 
-
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
@@ -82,4 +81,3 @@ class Product(models.Model):
 
         self.slug = slug
         super(Product, self).save(*args, **kwargs)
-
